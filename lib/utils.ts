@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -49,5 +50,33 @@ export function round2(value: number | string) {
     return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
   } else {
     throw new Error('Value is not a number or string');
+  }
+}
+
+// Toast helpers
+export const toastError = (msg: string) =>
+  toast.error(msg, {
+    className: '!bg-destructive !text-white',
+  });
+
+export const toastSuccess = (msg: string) =>
+  toast.success(msg, {
+    className: '!bg-primary !text-white',
+  });
+
+const CURRENCY_FORMATTER = new Intl.NumberFormat('en-CA', {
+  currency: 'CAD',
+  style: 'currency',
+  minimumFractionDigits: 2,
+});
+
+// Format currency using the formatter above
+export function formatCurrency(amount: number | string | null) {
+  if (typeof amount === 'number') {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === 'string') {
+    return CURRENCY_FORMATTER.format(Number(amount));
+  } else {
+    return 'NaN';
   }
 }
