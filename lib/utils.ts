@@ -80,3 +80,54 @@ export function formatCurrency(amount: number | string | null) {
     return 'NaN';
   }
 }
+
+// Shorten UUID
+export function formatId(id: string) {
+  return `..${id.substring(id.length - 6)}`;
+}
+
+// Format date and times
+export const formatDateTime = (dateString: Date) => {
+  const dateTimeOptions: Intl.DateTimeFormatOptions = {
+    month: 'short', // e.g. 'Oct'
+    year: 'numeric', // e.g. '2026'
+    day: 'numeric', // e.g. '25'
+    hour: 'numeric', // e.g. '8'
+    minute: 'numeric', // e.g. '30'
+    hour12: true, // 12-hour (true) / 24-hour (false)
+  };
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'short', // e.g. 'Mon'
+    month: 'short', // e.g. 'Oct'
+    year: 'numeric', // e.g. '2026'
+    day: 'numeric', // e.g. '25'
+  };
+
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: 'numeric', // e.g. '8'
+    minute: 'numeric', // e.g. '30'
+    hour12: true, // 12-hour (true) / 24-hour (false)
+  };
+
+  const formattedDateTime: string = new Date(dateString).toLocaleString(
+    'en-CA',
+    dateTimeOptions,
+  );
+
+  const formattedDate: string = new Date(dateString).toLocaleString(
+    'en-CA',
+    dateOptions,
+  );
+
+  const formattedTime: string = new Date(dateString).toLocaleString(
+    'en-CA',
+    timeOptions,
+  );
+
+  return {
+    dateTime: formattedDateTime,
+    dateOnly: formattedDate,
+    timeOnly: formattedTime,
+  };
+};
