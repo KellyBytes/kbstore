@@ -168,7 +168,7 @@ export async function approvePayPalOrder(
     if (!order) throw new Error('Order not found');
 
     const captureData = await paypal.capturePayment(data.orderID);
-    console.log(captureData);
+    // console.log(captureData);
 
     if (
       !captureData ||
