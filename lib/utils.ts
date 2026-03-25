@@ -62,7 +62,8 @@ export const toastError = (msg: string) =>
 
 export const toastSuccess = (msg: string) =>
   toast.success(msg, {
-    className: '!bg-primary !text-white',
+    // className: '!bg-primary !text-white',
+    className: '!bg-secondary !text-secondary-foreground',
   });
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat('en-CA', {
