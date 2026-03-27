@@ -3,7 +3,12 @@
 import { Product } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  ControllerRenderProps,
+  SubmitHandler,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import { z } from 'zod';
 import { insertProductSchema, updateProductSchema } from '@/lib/validators';
 import { productDefaultValues } from '@/lib/constants';
@@ -76,7 +81,11 @@ const ProductForm = ({
     }
   };
 
-  const images = form.watch('images');
+  // const images = form.watch('images');
+  const images = useWatch({
+    control: form.control,
+    name: 'images',
+  });
 
   return (
     <Form {...form}>
