@@ -1,3 +1,4 @@
 {
-  "cSpell.ignoreWords": ["kbstore", "orderitems", "uploadthing"]
+  "cSpell.ignoreWords": ["kbstore", "orderitems", "uploadthing"],
+  "explorer.copyRelativePathSeparator": "/"
 }
