@@ -11,21 +11,24 @@ import {
 import AutoPlay from 'embla-carousel-autoplay';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRef } from 'react';
 
 const ProductCarousel = ({ data }: { data: Product[] }) => {
+  const autoplay = useRef(
+    AutoPlay({
+      delay: 5000,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    }),
+  );
+
   return (
     <Carousel
       className="w-full mb-12"
       opts={{
         loop: true,
       }}
-      plugins={[
-        AutoPlay({
-          delay: 5000,
-          stopOnInteraction: true,
-          stopOnMouseEnter: true,
-        }),
-      ]}
+      plugins={[autoplay.current]}
     >
       <CarouselContent>
         {data.map((product: Product) => (
