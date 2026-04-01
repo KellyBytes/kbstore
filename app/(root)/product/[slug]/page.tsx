@@ -1,12 +1,13 @@
 import ProductImages from '@/components/shared/product/product-images';
 import ProductPrice from '@/components/shared/product/product-price';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { getProductBySlug } from '@/lib/actions/product.actions';
 import { notFound } from 'next/navigation';
 import AddToCart from '@/components/shared/product/add-to-cart';
 import { getMyCart } from '@/lib/actions/cart.actions';
+import ReviewList from './review-list';
+import { auth } from '@/auth';
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -15,6 +16,9 @@ const ProductDetailsPage = async (props: {
 
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+
+  const session = await auth();
+  const userId = session?.user?.id;
 
   const cart = await getMyCart();
 
@@ -26,6 +30,7 @@ const ProductDetailsPage = async (props: {
           <div className="col-span-2">
             <ProductImages images={product.images} />
           </div>
+
           {/* Details Columns */}
           <div className="col-span-2 p-5">
             <div className="flex flex-col gap-6">
@@ -48,6 +53,7 @@ const ProductDetailsPage = async (props: {
               <p>{product.description}</p>
             </div>
           </div>
+
           {/* Action Column */}
           <div>
             <Card>
@@ -85,6 +91,14 @@ const ProductDetailsPage = async (props: {
             </Card>
           </div>
         </div>
+      </section>
+      <section className="mt-10">
+        <h2 className="h2-bold">Customer Reviews</h2>
+        <ReviewList
+          userId={userId || ''}
+          productId={product.id}
+          productSlug={product.slug}
+        />
       </section>
     </>
   );
