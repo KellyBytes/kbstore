@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import z from 'zod';
 import { insertReviewSchema } from '@/lib/validators';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,6 +33,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { StarIcon } from 'lucide-react';
+import {
+  createUpdateReview,
+  getReviewByProductId,
+} from '@/lib/actions/review.actions';
+import { toastError, toastSuccess } from '@/lib/utils';
 
 const ReviewForm = ({
   userId,
@@ -41,7 +46,7 @@ const ReviewForm = ({
 }: {
   userId: string;
   productId: string;
-  onReviewSubmitted?: () => void;
+  onReviewSubmitted: () => void;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -50,8 +55,37 @@ const ReviewForm = ({
     defaultValues: reviewFormDefaultValues,
   });
 
-  const handleOpenForm = () => {
+  // Open Form Handler
+  const handleOpenForm = async () => {
+    form.setValue('productId', productId);
+    form.setValue('userId', userId);
+
+    const review = await getReviewByProductId({ productId });
+
+    if (review) {
+      form.setValue('title', review.title);
+      form.setValue('description', review.description);
+      form.setValue('rating', review.rating);
+    }
+
     setOpen(true);
+  };
+
+  // Submit Form Handler
+  const onSubmit: SubmitHandler<
+    z.infer<typeof insertReviewSchema>
+  > = async values => {
+    const res = await createUpdateReview({ ...values, productId });
+
+    if (!res.success) {
+      toastError(res.message);
+    }
+
+    setOpen(false);
+
+    onReviewSubmitted();
+
+    toastSuccess(res.message);
   };
 
   return (
@@ -61,7 +95,7 @@ const ReviewForm = ({
       </Button>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
-          <form method="POST">
+          <form method="POST" onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>Write a Review</DialogTitle>
               <DialogDescription>
@@ -100,7 +134,7 @@ const ReviewForm = ({
                   <FormItem>
                     <FormLabel>Rating</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={value => field.onChange(Number(value))}
                       value={field.value ? field.value.toString() : ''}
                     >
                       <FormControl>
