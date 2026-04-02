@@ -143,7 +143,7 @@ export const insertReviewSchema = z.object({
   // rating: z.coerce
   rating: z
     .number()
-    .int()
+    // .int()
     .min(1, 'Rating must be at least 1')
     .max(5, 'Rating must be at most 5'),
 });
