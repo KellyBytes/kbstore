@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from './ui/button';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Button } from './ui/button';
 
 // Static target date (replace with desired date)
-const TARGET_DATE = new Date('2026-08-01T00:00:00');
+const TARGET_DATE = new Date('2026-11-01T00:00:00');
 
 // Function to calculate the time remaining
 const calculateTimeRemaining = (targetDate: Date) => {
