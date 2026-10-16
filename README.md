@@ -154,16 +154,34 @@ NEXTAUTH_SECRET=
 NEXTAUTH_URL=
 
 STRIPE_SECRET_KEY=
-STRIPE_PUBLISHABLE_KEY=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 STRIPE_WEBHOOK_SECRET=
 
 PAYPAL_CLIENT_ID=
-PAYPAL_SECRET=
+PAYPAL_APP_SECRET=
+PAYPAL_API_URL=https://api-m.sandbox.paypal.com
 
 UPLOADTHING_SECRET=
 UPLOADTHING_APP_ID=
 
 RESEND_API_KEY=
+SENDER_EMAIL=onboarding@resend.dev
+```
+
+Optional app settings (the values shown are the defaults used when unset):
+
+```bash
+NEXT_PUBLIC_APP_NAME=kbstore
+NEXT_PUBLIC_APP_APP_DESCRIPTION="A modern e-commerce platform built with Next.js"
+NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+
+LATEST_PRODUCTS_LIMIT=4
+PAGE_SIZE=12
+
+# Comma + space separated lists
+PAYMENT_METHODS="PayPal, Stripe, CashOnDelivery"
+DEFAULT_PAYMENT_METHOD=PayPal
+USER_ROLES="admin, user"
 ```
 <br />
 
