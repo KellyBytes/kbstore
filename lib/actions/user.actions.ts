@@ -17,6 +17,7 @@ import { z } from 'zod';
 import { PAGE_SIZE } from '../constants';
 import { revalidatePath } from 'next/cache';
 import { Prisma } from '../generated/prisma/client';
+import { requireAdmin } from '../auth-guard';
 import { getMyCart } from './cart.actions';
 
 // Sign in the user with credentials
@@ -234,6 +235,8 @@ export async function getAllUsers({
 
 // Delete a user
 export async function deleteUser(id: string) {
+  await requireAdmin();
+
   try {
     await prisma.user.delete({
       where: { id },
@@ -252,6 +255,8 @@ export async function deleteUser(id: string) {
 
 // Update a user
 export async function updateUser(user: z.infer<typeof updateUserSchema>) {
+  await requireAdmin();
+
   try {
     await prisma.user.update({
       where: { id: user.id },
