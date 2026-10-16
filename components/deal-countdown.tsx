@@ -2,16 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { Button } from './ui/button';
 
 // Static target date (replace with desired date)
 const TARGET_DATE = new Date('2026-11-01T00:00:00');
 
 // Function to calculate the time remaining
-const calculateTimeRemaining = (targetDate: Date) => {
-  const currentTime = new Date();
-  const timeDifference = Math.max(Number(targetDate) - Number(currentTime), 0);
+const calculateTimeRemaining = (targetDate: Date, currentTime: number) => {
+  const timeDifference = Math.max(Number(targetDate) - currentTime, 0);
   return {
     days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
     hours: Math.floor(
@@ -22,31 +21,25 @@ const calculateTimeRemaining = (targetDate: Date) => {
   };
 };
 
+// Clock store that ticks every second
+const subscribeToClock = (onTick: () => void) => {
+  const timerInterval = setInterval(onTick, 1000);
+  return () => clearInterval(timerInterval);
+};
+
+// Current time truncated to the second, so the snapshot is stable within a tick
+const getClockSnapshot = () => Math.floor(Date.now() / 1000) * 1000;
+
+// The server has no client clock; render the loading state so hydration matches
+const getServerClockSnapshot = () => null;
+
 const DealCountdown = () => {
-  const [time, setTime] = useState<ReturnType<typeof calculateTimeRemaining>>(
-    () => calculateTimeRemaining(TARGET_DATE),
+  const now = useSyncExternalStore(
+    subscribeToClock,
+    getClockSnapshot,
+    getServerClockSnapshot,
   );
-
-  useEffect(() => {
-    // Calculate initial time on client
-    // setTime(calculateTimeRemaining(TARGET_DATE));
-
-    const timerInterval = setInterval(() => {
-      const newTime = calculateTimeRemaining(TARGET_DATE);
-      setTime(newTime);
-
-      if (
-        newTime.days === 0 &&
-        newTime.hours === 0 &&
-        newTime.minutes === 0 &&
-        newTime.seconds === 0
-      ) {
-        clearInterval(timerInterval);
-      }
-    }, 1000);
-
-    return () => clearInterval(timerInterval);
-  }, []);
+  const time = now === null ? null : calculateTimeRemaining(TARGET_DATE, now);
 
   if (!time) {
     return (
